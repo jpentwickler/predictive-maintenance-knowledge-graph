@@ -35,11 +35,11 @@ Where:
 ```
 ├── docs/
 │   ├── ontology/
-│   │   ├── 01-domain-analysis.md
-│   │   ├── 02-reuse-analysis.md
-│   │   ├── 03-terminology.md ✅ (Updated - Survival Analysis Focus)
-│   │   ├── 04-classes-hierarchy.md (Next)
-│   │   ├── 05-properties.md
+│   │   ├── 01-domain-analysis.md ✅
+│   │   ├── 02-reuse-analysis.md ✅
+│   │   ├── 03-terminology.md ✅ (Survival Analysis Focus)
+│   │   ├── 04-classes-hierarchy.md ✅ (Mathematical Foundation)
+│   │   ├── 05-properties.md (Next)
 │   │   ├── 06-constraints.md
 │   │   └── 07-instances.md
 │   ├── implementation/
@@ -65,15 +65,22 @@ This project follows the **7-step iterative ontology development process** based
 
 1. **Determine Domain and Focus** 🎯 ✅ Complete
 2. **Consider Reuse** ♻️ ✅ Complete
-3. **Enumerate Terms** 📝 ✅ **Updated - Survival Analysis & Condition Monitoring**
-4. **Define Classes** 🏢 🚧 In Progress
-5. **Define Properties** 🏷️
+3. **Enumerate Terms** 📝 ✅ Complete - Survival Analysis & Condition Monitoring
+4. **Define Classes** 🏢 ✅ **Complete - Mathematical Foundation Classes**
+5. **Define Properties** 🏷️ 🚧 In Progress
 6. **Define Constraints** 🔒
 7. **Create Instances** 📊
 
-## Current Focus: Survival Analysis & Condition Monitoring
+## Current Focus: Mathematical Class Hierarchies & Properties
 
-The ontology has been redesigned to prioritize mathematical foundations for 30-day failure probability calculation:
+The ontology has established a robust mathematical foundation for 30-day failure probability calculation:
+
+### **Step 4 Achievements** ✅:
+- **Mathematical Function Classes**: Weibull survival functions, hazard functions, probability distributions
+- **Equipment Hierarchy**: ISA-95, SEMI, and MIMOSA standards-compliant equipment modeling
+- **Manufacturing Process Classes**: Semiconductor-specific process and recipe hierarchies
+- **Prediction Classes**: 30-day failure probability, hazard analysis, model management
+- **Neo4j Implementation**: Complete label and relationship mapping
 
 ### **Core Innovation Areas**:
 - **Weibull Survival Functions**: Historical lifetime modeling for pump populations
@@ -89,8 +96,9 @@ The ontology has been redesigned to prioritize mathematical foundations for 30-d
 
 1. Review the [Domain Analysis](docs/ontology/01-domain-analysis.md) to understand the scope and objectives
 2. Explore the [Reuse Analysis](docs/ontology/02-reuse-analysis.md) for ontology selection rationale
-3. **NEW**: Study the [Survival Analysis Terminology](docs/ontology/03-terminology.md) for mathematical foundations
-4. Check out the [Neo4j Implementation](docs/implementation/neo4j-schema.md) for technical details (coming soon)
+3. Study the [Survival Analysis Terminology](docs/ontology/03-terminology.md) for mathematical foundations
+4. **NEW**: Examine the [Mathematical Class Hierarchies](docs/ontology/04-classes-hierarchy.md) for structural design
+5. Check out the [Neo4j Implementation](docs/implementation/neo4j-schema.md) for technical details (coming soon)
 
 ## Technology Stack
 
@@ -114,20 +122,25 @@ The ontology has been redesigned to prioritize mathematical foundations for 30-d
 
 ## Implementation Priorities
 
-### **Phase 1: Survival Foundation** (Current)
-- Weibull parameter estimation from historical data
-- Basic survival function calculation
-- Pump-specific lifetime modeling
+### **Phase 1: Mathematical Foundation** ✅ Complete
+- Weibull survival function classes
+- Equipment hierarchy with ISA-95/SEMI compliance
+- Mathematical computation classes for AI agent
 
-### **Phase 2: Condition Integration** (Next)
-- Health index calculation from telemetry
-- Real-time condition assessment
-- Trend analysis and degradation detection
+### **Phase 2: Properties & Relationships** (Current)
+- Mathematical properties for survival analysis
+- Temporal properties for prediction windows
+- Equipment-process relationship properties
 
-### **Phase 3: Blended Prediction** (Core Goal)
-- Combine survival and condition hazards
-- 30-day failure probability calculation
-- Automated report generation for AI agent
+### **Phase 3: Constraints & Validation** (Next)
+- Mathematical constraints for model parameters
+- Data quality constraints for telemetry
+- Business logic constraints for criticality assessment
+
+### **Phase 4: Instance Population** (Final)
+- Real pump data ingestion
+- Historical failure data modeling
+- Live telemetry integration
 
 ## Contributing
 
@@ -142,10 +155,10 @@ Comprehensive documentation is available in the `docs/` directory, following the
 
 ---
 
-**Status**: 🚧 In Development - Step 3 Complete (Survival Analysis Terminology)
+**Status**: 🚧 In Development - Step 4 Complete (Mathematical Class Hierarchies)
 
-**Current Phase**: Terminology Development Complete - Mathematical Foundation Established
+**Current Phase**: Class Definition Complete - Mathematical Foundation Established
 
-**Next Steps**: Step 4 - Define Classes (Mathematical Class Hierarchy)
+**Next Steps**: Step 5 - Define Properties (Mathematical & Temporal Properties)
 
-**Last Updated**: July 18, 2025
+**Last Updated**: July 20, 2025
