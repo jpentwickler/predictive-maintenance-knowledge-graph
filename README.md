@@ -39,8 +39,8 @@ Where:
 │   │   ├── 02-reuse-analysis.md ✅
 │   │   ├── 03-terminology.md ✅ (Survival Analysis Focus)
 │   │   ├── 04-classes-hierarchy.md ✅ (Mathematical Foundation)
-│   │   ├── 05-properties.md (Next)
-│   │   ├── 06-constraints.md
+│   │   ├── 05-properties.md ✅ (Minimal Viable Properties)
+│   │   ├── 06-constraints.md (Next)
 │   │   └── 07-instances.md
 │   ├── implementation/
 │   │   ├── neo4j-schema.md
@@ -66,21 +66,26 @@ This project follows the **7-step iterative ontology development process** based
 1. **Determine Domain and Focus** 🎯 ✅ Complete
 2. **Consider Reuse** ♻️ ✅ Complete
 3. **Enumerate Terms** 📝 ✅ Complete - Survival Analysis & Condition Monitoring
-4. **Define Classes** 🏢 ✅ **Complete - Mathematical Foundation Classes**
-5. **Define Properties** 🏷️ 🚧 In Progress
-6. **Define Constraints** 🔒
+4. **Define Classes** 🏢 ✅ Complete - Mathematical Foundation Classes
+5. **Define Properties** 🏷️ ✅ **Complete - Minimal Viable Properties**
+6. **Define Constraints** 🔒 🚧 In Progress
 7. **Create Instances** 📊
 
-## Current Focus: Mathematical Class Hierarchies & Properties
+## Current Focus: Minimal Viable Knowledge Graph Properties
 
-The ontology has established a robust mathematical foundation for 30-day failure probability calculation:
+The ontology now has complete property definitions supporting the core 30-day failure probability calculation:
 
-### **Step 4 Achievements** ✅:
-- **Mathematical Function Classes**: Weibull survival functions, hazard functions, probability distributions
-- **Equipment Hierarchy**: ISA-95, SEMI, and MIMOSA standards-compliant equipment modeling
-- **Manufacturing Process Classes**: Semiconductor-specific process and recipe hierarchies
-- **Prediction Classes**: 30-day failure probability, hazard analysis, model management
-- **Neo4j Implementation**: Complete label and relationship mapping
+### **Step 5 Achievements** ✅:
+- **Mathematical Properties**: Weibull parameters (ρ, β), blending weights (k), failure probabilities
+- **Equipment Properties**: Essential pump identification and context (ID, model, age, criticality)
+- **Temporal Properties**: Prediction windows, timestamps, age tracking for survival analysis
+- **Condition Monitoring Properties**: RUL, health index, data quality assessment
+- **Report Output Properties**: Risk classification (A-E), confidence levels, report metadata
+
+### **Minimal Viable Approach**:
+- **15 Essential Properties** for core calculation: `P_30(t) = 1 - exp[-(λ_W(t) + k·λ_R(t))]`
+- **Neo4j Ready Implementation** with property constraints and validation rules
+- **Growth Strategy** for systematic extension based on deployment needs
 
 ### **Core Innovation Areas**:
 - **Weibull Survival Functions**: Historical lifetime modeling for pump populations
@@ -97,8 +102,9 @@ The ontology has established a robust mathematical foundation for 30-day failure
 1. Review the [Domain Analysis](docs/ontology/01-domain-analysis.md) to understand the scope and objectives
 2. Explore the [Reuse Analysis](docs/ontology/02-reuse-analysis.md) for ontology selection rationale
 3. Study the [Survival Analysis Terminology](docs/ontology/03-terminology.md) for mathematical foundations
-4. **NEW**: Examine the [Mathematical Class Hierarchies](docs/ontology/04-classes-hierarchy.md) for structural design
-5. Check out the [Neo4j Implementation](docs/implementation/neo4j-schema.md) for technical details (coming soon)
+4. Examine the [Mathematical Class Hierarchies](docs/ontology/04-classes-hierarchy.md) for structural design
+5. **NEW**: Review the [Essential Property Definitions](docs/ontology/05-properties.md) for minimal viable implementation
+6. Check out the [Neo4j Implementation](docs/implementation/neo4j-schema.md) for technical details (coming soon)
 
 ## Technology Stack
 
@@ -127,17 +133,17 @@ The ontology has established a robust mathematical foundation for 30-day failure
 - Equipment hierarchy with ISA-95/SEMI compliance
 - Mathematical computation classes for AI agent
 
-### **Phase 2: Properties & Relationships** (Current)
-- Mathematical properties for survival analysis
-- Temporal properties for prediction windows
-- Equipment-process relationship properties
+### **Phase 2: Properties & Relationships** ✅ Complete
+- Essential mathematical properties for survival analysis
+- Temporal properties for 30-day prediction windows
+- Equipment identity and condition monitoring properties
 
-### **Phase 3: Constraints & Validation** (Next)
+### **Phase 3: Constraints & Validation** (Current)
 - Mathematical constraints for model parameters
 - Data quality constraints for telemetry
 - Business logic constraints for criticality assessment
 
-### **Phase 4: Instance Population** (Final)
+### **Phase 4: Instance Population** (Next)
 - Real pump data ingestion
 - Historical failure data modeling
 - Live telemetry integration
@@ -155,10 +161,10 @@ Comprehensive documentation is available in the `docs/` directory, following the
 
 ---
 
-**Status**: 🚧 In Development - Step 4 Complete (Mathematical Class Hierarchies)
+**Status**: 🚧 In Development - Step 5 Complete (Minimal Viable Properties)
 
-**Current Phase**: Class Definition Complete - Mathematical Foundation Established
+**Current Phase**: Property Definition Complete - Ready for Constraint Specification
 
-**Next Steps**: Step 5 - Define Properties (Mathematical & Temporal Properties)
+**Next Steps**: Step 6 - Define Constraints (Mathematical & Data Quality Constraints)
 
 **Last Updated**: July 20, 2025
