@@ -40,8 +40,8 @@ Where:
 │   │   ├── 03-terminology.md ✅ (Survival Analysis Focus)
 │   │   ├── 04-classes-hierarchy.md ✅ (Mathematical Foundation)
 │   │   ├── 05-properties.md ✅ (Minimal Viable Properties)
-│   │   ├── 06-constraints.md (Next)
-│   │   └── 07-instances.md
+│   │   ├── 06-constraints.md ✅ (Data Quality & Mathematical Constraints)
+│   │   └── 07-instances.md (Next)
 │   ├── implementation/
 │   │   ├── neo4j-schema.md
 │   │   ├── cypher-queries.md
@@ -67,25 +67,37 @@ This project follows the **7-step iterative ontology development process** based
 2. **Consider Reuse** ♻️ ✅ Complete
 3. **Enumerate Terms** 📝 ✅ Complete - Survival Analysis & Condition Monitoring
 4. **Define Classes** 🏢 ✅ Complete - Mathematical Foundation Classes
-5. **Define Properties** 🏷️ ✅ **Complete - Minimal Viable Properties**
-6. **Define Constraints** 🔒 🚧 In Progress
-7. **Create Instances** 📊
+5. **Define Properties** 🏷️ ✅ Complete - Minimal Viable Properties
+6. **Define Constraints** 🔒 ✅ **Complete - Data Quality & Mathematical Constraints**
+7. **Create Instances** 📊 🚧 In Progress
 
-## Current Focus: Minimal Viable Knowledge Graph Properties
+## Current Focus: Step 6 Complete - Property Constraints
 
-The ontology now has complete property definitions supporting the core 30-day failure probability calculation:
+The ontology now has comprehensive constraint definitions ensuring reliable 30-day failure probability calculations:
 
-### **Step 5 Achievements** ✅:
-- **Mathematical Properties**: Weibull parameters (ρ, β), blending weights (k), failure probabilities
-- **Equipment Properties**: Essential pump identification and context (ID, model, age, criticality)
-- **Temporal Properties**: Prediction windows, timestamps, age tracking for survival analysis
-- **Condition Monitoring Properties**: RUL, health index, data quality assessment
-- **Report Output Properties**: Risk classification (A-E), confidence levels, report metadata
+### **Step 6 Achievements** ✅:
+- **Mathematical Constraints**: Weibull parameter validation, probability bounds, blending weight limits
+- **Data Quality Constraints**: RUL validation, health index bounds (0=nominal, 1=degraded), data freshness requirements
+- **Business Logic Constraints**: Risk classification consistency (A=≥80%, E=<10%), criticality validation, service role enforcement
+- **Temporal Constraints**: Age validation, prediction window logic, timestamp ordering
+- **Report Integrity**: Complete report requirements, calculation traceability, assessment completeness
+- **Neo4j Implementation**: Database constraints with Cypher syntax for immediate deployment
 
-### **Minimal Viable Approach**:
-- **15 Essential Properties** for core calculation: `P_30(t) = 1 - exp[-(λ_W(t) + k·λ_R(t))]`
-- **Neo4j Ready Implementation** with property constraints and validation rules
-- **Growth Strategy** for systematic extension based on deployment needs
+### **Risk Classification (Corrected)**:
+- **A (Critical)**: P₃₀ ≥ 80% - Act now
+- **B (High)**: 60-80% - Schedule ASAP
+- **C (Medium)**: 30-60% - Intensify monitoring
+- **D (Low-Medium)**: 10-30% - Routine checks
+- **E (Low)**: <10% - Low risk
+
+### **Health Index Interpretation (Corrected)**:
+- **0**: Nominal/baseline behavior (healthy operation)
+- **1**: Extreme anomaly/maximal degradation
+
+### **Constraint Categories**:
+- **25 specific constraints** covering mathematical validation, data completeness, business logic, temporal consistency, report integrity, and data quality
+- **3 priority levels**: Critical (system breaking), Important (business logic), Recommended (quality assurance)
+- **Phased implementation strategy** for systematic deployment
 
 ### **Core Innovation Areas**:
 - **Weibull Survival Functions**: Historical lifetime modeling for pump populations
@@ -103,8 +115,9 @@ The ontology now has complete property definitions supporting the core 30-day fa
 2. Explore the [Reuse Analysis](docs/ontology/02-reuse-analysis.md) for ontology selection rationale
 3. Study the [Survival Analysis Terminology](docs/ontology/03-terminology.md) for mathematical foundations
 4. Examine the [Mathematical Class Hierarchies](docs/ontology/04-classes-hierarchy.md) for structural design
-5. **NEW**: Review the [Essential Property Definitions](docs/ontology/05-properties.md) for minimal viable implementation
-6. Check out the [Neo4j Implementation](docs/implementation/neo4j-schema.md) for technical details (coming soon)
+5. Review the [Essential Property Definitions](docs/ontology/05-properties.md) for minimal viable implementation
+6. **NEW**: Study the [Property Constraints](docs/ontology/06-constraints.md) for data quality and mathematical validation
+7. Check out the [Neo4j Implementation](docs/implementation/neo4j-schema.md) for technical details (coming soon)
 
 ## Technology Stack
 
@@ -138,12 +151,12 @@ The ontology now has complete property definitions supporting the core 30-day fa
 - Temporal properties for 30-day prediction windows
 - Equipment identity and condition monitoring properties
 
-### **Phase 3: Constraints & Validation** (Current)
+### **Phase 3: Constraints & Validation** ✅ Complete
 - Mathematical constraints for model parameters
 - Data quality constraints for telemetry
 - Business logic constraints for criticality assessment
 
-### **Phase 4: Instance Population** (Next)
+### **Phase 4: Instance Population** (Current)
 - Real pump data ingestion
 - Historical failure data modeling
 - Live telemetry integration
@@ -161,10 +174,10 @@ Comprehensive documentation is available in the `docs/` directory, following the
 
 ---
 
-**Status**: 🚧 In Development - Step 5 Complete (Minimal Viable Properties)
+**Status**: 🚧 In Development - Step 6 Complete (Property Constraints)
 
-**Current Phase**: Property Definition Complete - Ready for Constraint Specification
+**Current Phase**: Constraint Definition Complete - Ready for Instance Creation
 
-**Next Steps**: Step 6 - Define Constraints (Mathematical & Data Quality Constraints)
+**Next Steps**: Step 7 - Create Instances (Sample pump data and risk assessments)
 
 **Last Updated**: July 20, 2025
