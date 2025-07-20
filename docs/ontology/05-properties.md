@@ -106,8 +106,8 @@ Where: λ_W(t) = ((t+30)^ρ - t^ρ)/β^ρ and λ_R(t) = 30/RUL(t)
 | Property | Domain | Range | Required | Description | Example |
 |----------|---------|--------|----------|-------------|---------|
 | `remainingUsefulLife` | RemainingUsefulLife | xsd:integer | ✅ | RUL in days | 180 |
-| `healthIndex` | HealthIndex | xsd:float | ✅ | Health score [0,1] | 0.67 |
-| `degradationRate` | HealthIndex | xsd:float | ❌ | Health decline per day | -0.002 |
+| `healthIndex` | HealthIndex | xsd:float | ✅ | Anomaly score [0=nominal, 1=degraded] | 0.15 |
+| `degradationRate` | HealthIndex | xsd:float | ❌ | Health decline per day | 0.002 |
 
 ### **Data Quality Properties**
 
@@ -137,9 +137,9 @@ Where: λ_W(t) = ((t+30)^ρ - t^ρ)/β^ρ and λ_R(t) = 30/RUL(t)
 
 | Property | Domain | Range | Required | Description | Example |
 |----------|---------|--------|----------|-------------|---------|
-| `riskClassification` | ThirtyDayFailureProbability | xsd:string | ✅ | Risk level A-E | "C" |
+| `riskClassification` | ThirtyDayFailureProbability | xsd:string | ✅ | Risk level A-E | "E" |
 | `riskScore` | ThirtyDayFailureProbability | xsd:float | ✅ | Numeric risk [0,1] | 0.091 |
-| `actionRecommendation` | ThirtyDayFailureProbability | xsd:string | ❌ | Maintenance action | "Monitor closely" |
+| `actionRecommendation` | ThirtyDayFailureProbability | xsd:string | ❌ | Maintenance action | "Routine monitoring" |
 
 ### **Report Metadata Properties**
 
@@ -211,7 +211,7 @@ CREATE (weibull:WeibullSurvivalFunction:SurvivalFunction {
 ```cypher
 CREATE (prob:ThirtyDayFailureProbability:FailureProbability {
   hasFailureProbability: 0.091,
-  riskClassification: "C",
+  riskClassification: "E",
   riskScore: 0.091,
   predictionTimestamp: datetime("2025-07-20T10:30:00Z"),
   hasConfidenceLevel: 0.78,
@@ -264,7 +264,7 @@ hasWeibullScale > 0                    // Scale parameter must be positive
 hasBlendingWeight ∈ [0,1]             // Blending weight is bounded
 hasFailureProbability ∈ [0,1]         // Probability is bounded
 remainingUsefulLife ≥ 0               // RUL cannot be negative
-healthIndex ∈ [0,1]                   // Health index is normalized
+healthIndex ∈ [0,1]                   // Health index: 0=nominal, 1=degraded
 ```
 
 #### **Temporal Constraints**
@@ -277,7 +277,7 @@ lastTelemetryUpdate ≤ predictionTimestamp    // Data cannot be from future
 #### **Business Logic Constraints**
 ```
 criticalityLevel ∈ {Level1, Level2, Level3, Level4, Level5}
-riskClassification ∈ {A, B, C, D, E}
+riskClassification ∈ {A, B, C, D, E}  // A=highest risk, E=lowest risk
 serviceRole ∈ {Primary, Backup, Roughing}
 pumpType ∈ {Rotary, Scroll, Screw}
 ```
@@ -391,7 +391,7 @@ Extended Properties:
   :hasBlendingWeight 0.3 ;
   :remainingUsefulLife 180 ;
   :hasFailureProbability 0.091 ;
-  :riskClassification "C" ;
+  :riskClassification "E" ;
   :predictionTimestamp "2025-07-20T10:30:00Z"^^xsd:dateTime .
 
 :weibull_P001 a :WeibullSurvivalFunction ;
@@ -401,7 +401,7 @@ Extended Properties:
 
 :prob_P001 a :ThirtyDayFailureProbability ;
   :hasFailureProbability 0.091 ;
-  :riskClassification "C" ;
+  :riskClassification "E" ;
   :predictionTimestamp "2025-07-20T10:30:00Z"^^xsd:dateTime ;
   :hasConfidenceLevel 0.78 .
 
