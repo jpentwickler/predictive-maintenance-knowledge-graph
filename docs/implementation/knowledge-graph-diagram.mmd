@@ -1,0 +1,75 @@
+graph TD
+%% Vacuum Dry Pump Predictive Maintenance Knowledge Graph
+%% Version: v1.0 | Date: July 21, 2025 | Status: APPROVED
+
+%% Nodes
+DryPump["DryPump<br/>pumpIdentifier: STRING | KEY<br/>pumpModel: STRING<br/>manufacturer: STRING<br/>currentAge: INTEGER<br/>criticalityLevel: STRING<br/>serviceRole: STRING<br/>isOperational: BOOLEAN<br/>operatingHours: FLOAT<br/>installationDate: DATETIME"]
+ProcessChamber["ProcessChamber<br/>chamberId: STRING | KEY<br/>chamberType: STRING<br/>processEnvironment: STRING<br/>operatingPressure: FLOAT"]
+SemiconductorTool["SemiconductorTool<br/>toolId: STRING | KEY<br/>toolType: STRING<br/>toolModel: STRING<br/>toolState: STRING"]
+FabArea["FabArea<br/>areaId: STRING | KEY<br/>areaType: STRING<br/>cleanClass: STRING"]
+Fab["Fab<br/>fabId: STRING | KEY<br/>fabLocation: STRING<br/>fabCapacity: INTEGER"]
+WeibullSurvivalFunction["WeibullSurvivalFunction<br/>modelId: STRING | KEY<br/>weibullShape: FLOAT<br/>weibullScale: FLOAT<br/>weibullLocation: FLOAT<br/>parameterConfidence: FLOAT<br/>modelFitDate: DATETIME"]
+RemainingUsefulLife["RemainingUsefulLife<br/>rulId: STRING | KEY<br/>remainingUsefulLife: INTEGER<br/>healthIndex: FLOAT<br/>dataQualityScore: FLOAT<br/>lastTelemetryUpdate: DATETIME<br/>assessmentMethod: STRING"]
+ThirtyDayFailureProbability["ThirtyDayFailureProbability<br/>predictionId: STRING | KEY<br/>failureProbability: FLOAT<br/>riskClassification: STRING<br/>riskScore: FLOAT<br/>predictionTimestamp: DATETIME<br/>confidenceLevel: FLOAT<br/>calculationMethod: STRING"]
+BlendedHazardFunction["BlendedHazardFunction<br/>hazardId: STRING | KEY<br/>blendingWeight: FLOAT<br/>weibullHazard: FLOAT<br/>conditionHazard: FLOAT<br/>blendedHazard: FLOAT<br/>calculationTimestamp: DATETIME"]
+SemiconductorProcess["SemiconductorProcess<br/>processId: STRING | KEY<br/>processType: STRING<br/>processName: STRING<br/>criticalityLevel: STRING"]
+ProcessRecipe["ProcessRecipe<br/>recipeId: STRING | KEY<br/>recipeName: STRING<br/>recipeVersion: STRING<br/>vacuumRequirement: FLOAT"]
+MaintenanceReport["MaintenanceReport<br/>reportId: STRING | KEY<br/>reportGenerationTime: DATETIME<br/>calculationVersion: STRING<br/>reportType: STRING<br/>totalPumpsAssessed: INTEGER"]
+
+%% Relationships
+DryPump -->|SERVES<br/>serviceStartDate: DATETIME<br/>isPrimary: BOOLEAN| ProcessChamber
+ProcessChamber -->|PART_OF| SemiconductorTool
+SemiconductorTool -->|LOCATED_IN| FabArea
+FabArea -->|CONTAINS| Fab
+DryPump -->|HAS_SURVIVAL_MODEL<br/>modelVersion: STRING<br/>isActive: BOOLEAN| WeibullSurvivalFunction
+DryPump -->|HAS_RUL_ASSESSMENT<br/>assessmentTimestamp: DATETIME| RemainingUsefulLife
+DryPump -->|HAS_FAILURE_PREDICTION<br/>calculationDuration: FLOAT| ThirtyDayFailureProbability
+DryPump -->|HAS_HAZARD_CALCULATION| BlendedHazardFunction
+BlendedHazardFunction -->|CALCULATED_FROM_SURVIVAL| WeibullSurvivalFunction
+BlendedHazardFunction -->|CALCULATED_FROM_RUL| RemainingUsefulLife
+BlendedHazardFunction -->|GENERATES_PREDICTION| ThirtyDayFailureProbability
+ProcessChamber -->|EXECUTES| ProcessRecipe
+ProcessRecipe -->|PART_OF_PROCESS| SemiconductorProcess
+DryPump -->|CRITICAL_FOR<br/>impactLevel: STRING| SemiconductorProcess
+MaintenanceReport -->|INCLUDES_PUMP| DryPump
+MaintenanceReport -->|INCLUDES_PREDICTION| ThirtyDayFailureProbability
+
+%% Styling - Equipment Hierarchy
+classDef equipment_primary fill:#e3f2fd,stroke:#1976d2,stroke-width:3px,color:#000,font-size:12px
+class DryPump equipment_primary
+
+classDef equipment_secondary fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px,color:#000,font-size:12px
+class ProcessChamber equipment_secondary
+
+classDef equipment_tertiary fill:#e8f5e8,stroke:#388e3c,stroke-width:3px,color:#000,font-size:12px
+class SemiconductorTool equipment_tertiary
+
+classDef facility_area fill:#fff3e0,stroke:#f57c00,stroke-width:3px,color:#000,font-size:12px
+class FabArea facility_area
+
+classDef facility_fab fill:#fce4ec,stroke:#c2185b,stroke-width:3px,color:#000,font-size:12px
+class Fab facility_fab
+
+%% Styling - Mathematical Functions
+classDef math_survival fill:#e0f2f1,stroke:#00695c,stroke-width:3px,color:#000,font-size:12px
+class WeibullSurvivalFunction math_survival
+
+classDef math_condition fill:#f1f8e9,stroke:#689f38,stroke-width:3px,color:#000,font-size:12px
+class RemainingUsefulLife math_condition
+
+classDef math_prediction fill:#fff8e1,stroke:#ffa000,stroke-width:3px,color:#000,font-size:12px
+class ThirtyDayFailureProbability math_prediction
+
+classDef math_hazard fill:#e8eaf6,stroke:#3f51b5,stroke-width:3px,color:#000,font-size:12px
+class BlendedHazardFunction math_hazard
+
+%% Styling - Process Integration
+classDef process_main fill:#efebe9,stroke:#5d4037,stroke-width:3px,color:#000,font-size:12px
+class SemiconductorProcess process_main
+
+classDef process_recipe fill:#fafafa,stroke:#424242,stroke-width:3px,color:#000,font-size:12px
+class ProcessRecipe process_recipe
+
+%% Styling - Reporting
+classDef reporting fill:#e1f5fe,stroke:#0277bd,stroke-width:3px,color:#000,font-size:12px
+class MaintenanceReport reporting
