@@ -35,6 +35,32 @@ This directory contains complete, real-world examples of knowledge graph instanc
 - ✅ AI agent reporting (automated maintenance recommendations)
 - ✅ Mathematical consistency verification (blended hazard calculation)
 
+## 🔍 **Knowledge Graph Validation**
+
+### [Competency Questions Validation](./competency-questions-validation.md)
+**Comprehensive validation against the 16 Step 3 competency questions**
+
+| Validation Results | Score | Details |
+|-------------------|-------|---------|
+| **Overall Success Rate** | 87.5% (14/16) | Exceeds minimum requirements |
+| **Survival Analysis** | 75% (3/4) | Weibull modeling fully functional |
+| **Condition Monitoring** | 75% (3/4) | Real-time telemetry integration working |
+| **30-Day Predictions** | 100% (4/4) | Core prediction capability validated |
+| **Calculation Process** | 100% (4/4) | Mathematical traceability complete |
+
+**Key Validation Achievements:**
+- ✅ **30-Day Failure Probability**: Fully calculated and traceable (13.6% for P002)
+- ✅ **Mathematical Foundation**: Complete Weibull survival analysis implementation
+- ✅ **Real-time Integration**: Telemetry-based health index calculation working
+- ✅ **Algorithm Traceability**: Full model version and calculation method tracking
+- ✅ **Confidence Assessment**: Uncertainty quantification (83% confidence, ±2.5% band)
+
+**Minor Limitations Identified:**
+- ⚠️ **Single Pump Family**: Limited comparative analysis (only Pfeiffer HiPace 700)
+- ⚠️ **Historical Trends**: No time-series data (current snapshot only)
+
+**Validation Conclusion**: ✅ **PASSED** - Knowledge graph ready for AI agent deployment
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -60,6 +86,11 @@ This directory contains complete, real-world examples of knowledge graph instanc
    // Quick verification query
    MATCH (p:DryPump {pumpIdentifier: "P002"})-[:HAS_FAILURE_PREDICTION]->(pred)
    RETURN p.pumpIdentifier, pred.failureProbability, pred.riskClassification
+   ```
+
+4. **Run Competency Questions Validation**
+   ```bash
+   # Follow queries in competency-questions-validation.md to validate your deployment
    ```
 
 ## 🧮 Mathematical Foundation
@@ -155,6 +186,7 @@ ORDER BY pred.businessImpactScore DESC
    - `create-{id}-instance.cypher` - Complete creation script
    - `knowledge-graph-visualization.md` - Visual representation
 3. Update this index README with the new example
+4. Run competency questions validation against the new instance
 
 ### **Validation Requirements**
 - ✅ Mathematical consistency (hazard calculation verification)
@@ -162,6 +194,7 @@ ORDER BY pred.businessImpactScore DESC
 - ✅ Relationship completeness (all 15 relationship types included)
 - ✅ Business context (realistic equipment hierarchy and process impact)
 - ✅ Query pattern demonstration (at least 3 different query types)
+- ✅ Competency questions validation (>80% success rate required)
 
 ### **Documentation Standards**
 - Comprehensive property documentation with business context
@@ -169,6 +202,7 @@ ORDER BY pred.businessImpactScore DESC
 - Query pattern examples for common use cases
 - Visual diagrams showing knowledge graph structure
 - Deployment and verification instructions
+- Competency questions validation results
 
 ## 📈 Future Examples
 
@@ -183,13 +217,14 @@ ORDER BY pred.businessImpactScore DESC
 
 For questions about these examples:
 1. Review the comprehensive documentation in each example directory
-2. Check the mathematical model validation queries
+2. Check the competency questions validation results
 3. Verify Neo4j schema deployment is complete
-4. Consult the main project documentation in `/docs/`
+4. Run the mathematical model validation queries
+5. Consult the main project documentation in `/docs/`
 
 ---
 
 **Examples Status**: ✅ Production Ready  
-**Last Validated**: July 21, 2025  
+**Last Validated**: July 21, 2025 (87.5% competency questions success)  
 **Model Version**: v1.0  
-**Total Examples**: 1 (P002)
+**Total Examples**: 1 (P002) + Competency Validation
