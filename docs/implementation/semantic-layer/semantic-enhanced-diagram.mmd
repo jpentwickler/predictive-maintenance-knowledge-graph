@@ -1,0 +1,152 @@
+graph TD
+%% Semantic Layer Enhanced Predictive Maintenance Knowledge Graph
+%% Version: v2.0 Enhancement | Date: July 25, 2025 | Status: Proposal
+%% Architecture: Separate Semantic Overlay on v1.0 Core
+
+%% ===== OPERATIONAL LAYER (v1.0 Core - Unchanged) =====
+
+%% Core Operational Entities
+DryPump["DryPump<br/>pumpIdentifier: STRING | KEY<br/>pumpModel: STRING<br/>manufacturer: STRING<br/>currentAge: INTEGER<br/>criticalityLevel: STRING<br/>serviceRole: STRING<br/>isOperational: BOOLEAN<br/>operatingHours: FLOAT<br/>installationDate: DATETIME"]
+ProcessChamber["ProcessChamber<br/>chamberId: STRING | KEY<br/>chamberType: STRING<br/>processEnvironment: STRING<br/>operatingPressure: FLOAT"]
+SemiconductorTool["SemiconductorTool<br/>toolId: STRING | KEY<br/>toolType: STRING<br/>toolModel: STRING<br/>toolState: STRING"]
+FabArea["FabArea<br/>areaId: STRING | KEY<br/>areaType: STRING<br/>cleanClass: STRING"]
+Fab["Fab<br/>fabId: STRING | KEY<br/>fabLocation: STRING<br/>fabCapacity: INTEGER"]
+
+%% Mathematical Model Entities
+WeibullSurvivalFunction["WeibullSurvivalFunction<br/>modelId: STRING | KEY<br/>weibullShape: FLOAT<br/>weibullScale: FLOAT<br/>weibullLocation: FLOAT<br/>parameterConfidence: FLOAT<br/>modelFitDate: DATETIME"]
+RemainingUsefulLife["RemainingUsefulLife<br/>rulId: STRING | KEY<br/>remainingUsefulLife: INTEGER<br/>healthIndex: FLOAT<br/>dataQualityScore: FLOAT<br/>lastTelemetryUpdate: DATETIME<br/>assessmentMethod: STRING"]
+ThirtyDayFailureProbability["ThirtyDayFailureProbability<br/>predictionId: STRING | KEY<br/>failureProbability: FLOAT<br/>riskClassification: STRING<br/>riskScore: FLOAT<br/>predictionTimestamp: DATETIME<br/>confidenceLevel: FLOAT<br/>calculationMethod: STRING"]
+BlendedHazardFunction["BlendedHazardFunction<br/>hazardId: STRING | KEY<br/>blendingWeight: FLOAT<br/>weibullHazard: FLOAT<br/>conditionHazard: FLOAT<br/>blendedHazard: FLOAT<br/>calculationTimestamp: DATETIME"]
+
+%% Process Integration Entities
+SemiconductorProcess["SemiconductorProcess<br/>processId: STRING | KEY<br/>processType: STRING<br/>processName: STRING<br/>criticalityLevel: STRING"]
+ProcessRecipe["ProcessRecipe<br/>recipeId: STRING | KEY<br/>recipeName: STRING<br/>recipeVersion: STRING<br/>vacuumRequirement: FLOAT"]
+MaintenanceReport["MaintenanceReport<br/>reportId: STRING | KEY<br/>reportGenerationTime: DATETIME<br/>calculationVersion: STRING<br/>reportType: STRING<br/>totalPumpsAssessed: INTEGER"]
+
+%% ===== SEMANTIC LAYER (v2.0 Enhancement - New) =====
+
+%% Central Semantic Hub
+SemanticConcept["SemanticConcept<br/>conceptId: STRING | KEY<br/>label: STRING<br/>definition: STRING<br/>semanticCategory: STRING<br/>domain: STRING<br/>isProprietaryInnovation: BOOLEAN"]
+
+%% Standards Integration
+OntologyTerm["OntologyTerm<br/>uri: STRING | KEY<br/>ontologySource: STRING<br/>standardVersion: STRING<br/>termLabel: STRING<br/>formalDefinition: STRING"]
+
+%% Academic/Scientific Context
+DomainConcept["DomainConcept<br/>domainId: STRING | KEY<br/>domainName: STRING<br/>description: STRING<br/>disciplineArea: STRING<br/>methodologyBasis: STRING"]
+
+%% Innovation Documentation
+InnovationContext["InnovationContext<br/>innovationId: STRING | KEY<br/>innovationType: STRING<br/>businessAdvantage: STRING<br/>innovationDomain: STRING<br/>patentPotential: BOOLEAN"]
+
+%% Business Context
+SemanticContext["SemanticContext<br/>contextId: STRING | KEY<br/>industry: STRING<br/>processDomain: STRING<br/>regulatoryFramework: STRING<br/>businessContext: STRING"]
+
+%% ===== OPERATIONAL RELATIONSHIPS (v1.0 Core - Unchanged) =====
+
+%% Equipment Hierarchy
+DryPump -->|SERVES<br/>serviceStartDate: DATETIME<br/>isPrimary: BOOLEAN| ProcessChamber
+ProcessChamber -->|PART_OF| SemiconductorTool
+SemiconductorTool -->|LOCATED_IN| FabArea
+FabArea -->|CONTAINS| Fab
+
+%% Mathematical Relationships
+DryPump -->|HAS_SURVIVAL_MODEL<br/>modelVersion: STRING<br/>isActive: BOOLEAN| WeibullSurvivalFunction
+DryPump -->|HAS_RUL_ASSESSMENT<br/>assessmentTimestamp: DATETIME| RemainingUsefulLife
+DryPump -->|HAS_FAILURE_PREDICTION<br/>calculationDuration: FLOAT| ThirtyDayFailureProbability
+DryPump -->|HAS_HAZARD_CALCULATION| BlendedHazardFunction
+BlendedHazardFunction -->|CALCULATED_FROM_SURVIVAL| WeibullSurvivalFunction
+BlendedHazardFunction -->|CALCULATED_FROM_RUL| RemainingUsefulLife
+BlendedHazardFunction -->|GENERATES_PREDICTION| ThirtyDayFailureProbability
+
+%% Process Integration
+ProcessChamber -->|EXECUTES| ProcessRecipe
+ProcessRecipe -->|PART_OF_PROCESS| SemiconductorProcess
+DryPump -->|CRITICAL_FOR<br/>impactLevel: STRING| SemiconductorProcess
+
+%% Reporting
+MaintenanceReport -->|INCLUDES_PUMP| DryPump
+MaintenanceReport -->|INCLUDES_PREDICTION| ThirtyDayFailureProbability
+
+%% ===== SEMANTIC RELATIONSHIPS (v2.0 Enhancement - New) =====
+
+%% Entity to Semantic Concept Mappings (Dotted lines for semantic overlay)
+DryPump -.->|HAS_SEMANTIC_TYPE<br/>semanticRelevance: STRING<br/>confidenceLevel: FLOAT| SemanticConcept
+ProcessChamber -.->|HAS_SEMANTIC_TYPE<br/>semanticRelevance: STRING<br/>confidenceLevel: FLOAT| SemanticConcept
+SemiconductorTool -.->|HAS_SEMANTIC_TYPE<br/>semanticRelevance: STRING<br/>confidenceLevel: FLOAT| SemanticConcept
+WeibullSurvivalFunction -.->|HAS_SEMANTIC_TYPE<br/>mathematicalRole: STRING| SemanticConcept
+RemainingUsefulLife -.->|HAS_SEMANTIC_TYPE<br/>mathematicalRole: STRING| SemanticConcept
+ThirtyDayFailureProbability -.->|HAS_SEMANTIC_TYPE<br/>semanticAspect: STRING| SemanticConcept
+BlendedHazardFunction -.->|HAS_SEMANTIC_TYPE<br/>innovationComponent: STRING| SemanticConcept
+SemiconductorProcess -.->|HAS_SEMANTIC_TYPE<br/>semanticRelevance: STRING<br/>confidenceLevel: FLOAT| SemanticConcept
+ProcessRecipe -.->|HAS_SEMANTIC_TYPE<br/>semanticRelevance: STRING<br/>confidenceLevel: FLOAT| SemanticConcept
+MaintenanceReport -.->|HAS_SEMANTIC_TYPE<br/>semanticAspect: STRING| SemanticConcept
+
+%% Semantic Concept to Context Mappings
+SemanticConcept -.->|ALIGNED_WITH<br/>alignmentStrength: STRING<br/>mappingJustification: STRING| OntologyTerm
+SemanticConcept -.->|PART_OF_DOMAIN<br/>domainRole: STRING| DomainConcept
+SemanticConcept -.->|REPRESENTS_INNOVATION_IN<br/>innovationAspect: STRING| InnovationContext
+SemanticConcept -.->|HAS_MEANING_IN_CONTEXT<br/>contextualInterpretation: STRING<br/>businessImplication: STRING| SemanticContext
+
+%% Cross-Semantic Relationships
+SemanticConcept -.->|RELATES_TO<br/>relationshipType: STRING<br/>relationshipStrength: STRING| SemanticConcept
+
+%% ===== STYLING =====
+
+%% Core Operational Entities (Blue Tones - v1.0)
+classDef core_equipment fill:#e3f2fd,stroke:#1976d2,stroke-width:3px,color:#000,font-size:10px
+class DryPump,ProcessChamber,SemiconductorTool,FabArea,Fab core_equipment
+
+classDef core_math fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px,color:#000,font-size:10px
+class WeibullSurvivalFunction,RemainingUsefulLife,ThirtyDayFailureProbability,BlendedHazardFunction core_math
+
+classDef core_process fill:#e8f5e8,stroke:#388e3c,stroke-width:3px,color:#000,font-size:10px
+class SemiconductorProcess,ProcessRecipe,MaintenanceReport core_process
+
+%% Semantic Layer Entities (Pink/Green Tones - v2.0)
+classDef semantic_central fill:#fce4ec,stroke:#c2185b,stroke-width:4px,color:#000,font-size:10px
+class SemanticConcept semantic_central
+
+classDef semantic_standards fill:#e0f2f1,stroke:#00695c,stroke-width:3px,color:#000,font-size:10px
+class OntologyTerm semantic_standards
+
+classDef semantic_domain fill:#f1f8e9,stroke:#689f38,stroke-width:3px,color:#000,font-size:10px
+class DomainConcept semantic_domain
+
+classDef semantic_innovation fill:#fff8e1,stroke:#ffa000,stroke-width:3px,color:#000,font-size:10px
+class InnovationContext semantic_innovation
+
+classDef semantic_context fill:#e8eaf6,stroke:#3f51b5,stroke-width:3px,color:#000,font-size:10px
+class SemanticContext semantic_context
+
+%% ===== LEGEND =====
+
+subgraph Legend["🔍 Architecture Legend"]
+    direction TB
+    LegendOp["📊 Operational Layer (v1.0)<br/>Blue tones - Core business logic"]
+    LegendSem["🧠 Semantic Layer (v2.0)<br/>Pink/Green tones - Rich descriptions"]
+    LegendOpRel["━━━ Operational Relationships<br/>Core business logic flow"]
+    LegendSemRel["┅┅┅ Semantic Relationships<br/>Semantic overlay connections"]
+    
+    LegendOp ~~~ LegendSem
+    LegendSem ~~~ LegendOpRel
+    LegendOpRel ~~~ LegendSemRel
+end
+
+classDef legend_box fill:#f9f9f9,stroke:#666,stroke-width:1px,color:#333,font-size:9px
+class Legend,LegendOp,LegendSem,LegendOpRel,LegendSemRel legend_box
+
+%% ===== SEMANTIC PATTERNS ILLUSTRATION =====
+
+subgraph Patterns["🎯 Semantic Patterns"]
+    direction TB
+    PatternA["Pattern A: Standard-Connected<br/>DryPump → SemanticConcept → MIMOSA/SOSA"]
+    PatternB["Pattern B: Domain-Connected<br/>WeibullSurvivalFunction → Reliability Engineering"]
+    PatternC["Pattern C: Hybrid<br/>ThirtyDayFailureProbability → Risk Standards + Innovation"]
+    PatternD["Pattern D: Pure Innovation<br/>BlendedHazardFunction → Innovation Context"]
+    
+    PatternA ~~~ PatternB
+    PatternB ~~~ PatternC
+    PatternC ~~~ PatternD
+end
+
+classDef pattern_box fill:#f0f8ff,stroke:#4682b4,stroke-width:1px,color:#333,font-size:9px
+class Patterns,PatternA,PatternB,PatternC,PatternD pattern_box
