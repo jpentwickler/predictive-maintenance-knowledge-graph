@@ -24,7 +24,7 @@ class SemanticVectorizer:
         print("🚀 Initializing Semantic Vectorizer...")
         
         # Load credentials from environment
-        self.neo4j_url = os.getenv("NEO4J_URL", "neo4j://localhost:7687")
+        self.neo4j_url = os.getenv("NEO4J_URI", "neo4j://localhost:7687")
         self.neo4j_username = os.getenv("NEO4J_USERNAME", "neo4j")
         self.neo4j_password = os.getenv("NEO4J_PASSWORD")
         self.openai_api_key = os.getenv("OPENAI_API_KEY")
