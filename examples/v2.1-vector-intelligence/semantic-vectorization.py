@@ -159,7 +159,7 @@ class SemanticVectorizer:
                 node_label="SemanticVector",
                 text_node_property="text",
                 embedding_node_property="embedding",
-                distance_strategy="cosine"
+                distance_strategy="COSINE"
             )
             
             print(f"✅ Vector store created successfully!")
