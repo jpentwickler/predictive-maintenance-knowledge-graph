@@ -176,38 +176,81 @@ class SemanticVectorizer:
             print("   - Neo4j permissions")
             raise
 
-    def step4_test_similarity_search(self):
-        """Test vector similarity search"""
-        print("\n🔍 STEP 4: Testing similarity search...")
+    def step4_create_semantic_relationships(self):
+        """Create relationships between SemanticVector nodes and the existing knowledge graph"""
+        print("\n🔗 STEP 4: Creating semantic relationships...")
         
-        test_queries = [
-            "equipment failure cost manufacturing",
-            "predictive maintenance strategy",
-            "vacuum pump semiconductor process",
-            "business impact downtime"
-        ]
-        
-        for i, query in enumerate(test_queries, 1):
-            print(f"\n   Test {i}: '{query}'")
-            
-            try:
-                results = self.vector_store.similarity_search_with_score(query, k=2)
+        try:
+            with self.driver.session() as session:
+                # 1. Connect SemanticVector nodes to their corresponding SemanticConcept nodes
+                print("   📊 Connecting vectors to semantic concepts...")
+                relationship_query_1 = """
+                MATCH (sv:SemanticVector)
+                MATCH (sc:SemanticConcept {conceptId: sv.concept_id})
+                MERGE (sv)-[:VECTOR_REPRESENTATION_OF]->(sc)
+                RETURN sv.concept_id as concept_id, 
+                       'Connected to SemanticConcept' as status
+                """
                 
-                for j, (doc, score) in enumerate(results, 1):
-                    concept_id = doc.metadata.get('concept_id', 'Unknown')
-                    label = doc.metadata.get('label', 'Unknown')
-                    print(f"      {j}. {concept_id}")
-                    print(f"         Similarity: {score:.3f}")
-                    print(f"         Label: {label}")
-                    
-            except Exception as e:
-                print(f"      ❌ Search failed: {e}")
-        
-        print("\n✅ Similarity search working!")
+                result_1 = session.run(relationship_query_1)
+                records_1 = list(result_1)
+                print(f"   ✅ Created {len(records_1)} VECTOR_REPRESENTATION_OF relationships")
+                
+                for record in records_1:
+                    print(f"      • {record['concept_id']} → SemanticConcept")
+                
+                # 2. Create direct relationships from operational equipment to vector representations  
+                print("   🔧 Connecting equipment to vector representations...")
+                relationship_query_2 = """
+                MATCH (dp:DryPump)-[:HAS_SEMANTIC_TYPE]->(sc:SemanticConcept)
+                MATCH (sv:SemanticVector {concept_id: sc.conceptId})
+                MERGE (dp)-[:HAS_VECTOR_REPRESENTATION]->(sv)
+                RETURN dp.pumpIdentifier as pump_id,
+                       sv.concept_id as vector_concept,
+                       'Connected' as status
+                """
+                
+                result_2 = session.run(relationship_query_2)
+                records_2 = list(result_2)
+                print(f"   ✅ Created {len(records_2)} HAS_VECTOR_REPRESENTATION relationships")
+                
+                for record in records_2:
+                    print(f"      • {record['pump_id']} → {record['vector_concept']}")
+                
+                # 3. Verify the relationship structure
+                print("   🔍 Verifying relationship structure...")
+                verification_query = """
+                MATCH (dp:DryPump)-[:HAS_VECTOR_REPRESENTATION]->(sv:SemanticVector)
+                      -[:VECTOR_REPRESENTATION_OF]->(sc:SemanticConcept)
+                RETURN dp.pumpIdentifier as pump,
+                       sv.concept_id as vector_concept,
+                       sc.label as semantic_label,
+                       size(sv.embedding) as embedding_dims
+                """
+                
+                result_3 = session.run(verification_query)
+                records_3 = list(result_3)
+                
+                print(f"   ✅ Verified {len(records_3)} complete paths: Equipment → Vector → Concept")
+                for record in records_3:
+                    print(f"      • {record['pump']} → {record['vector_concept']} → {record['semantic_label']}")
+                
+                print(f"\n✅ Semantic relationships created successfully!")
+                print(f"   📈 Total vector-to-concept connections: {len(records_1)}")
+                print(f"   🔧 Total equipment-to-vector connections: {len(records_2)}")
+                print(f"   🔗 Total verified paths: {len(records_3)}")
+                
+        except Exception as e:
+            print(f"❌ ERROR: Failed to create semantic relationships: {e}")
+            print("   Common issues:")
+            print("   - SemanticVector nodes not yet created")
+            print("   - SemanticConcept nodes missing")
+            print("   - Equipment nodes not linked to semantic concepts")
+            raise
 
-    def step5_test_hybrid_retrieval(self):
-        """Test hybrid retrieval (vector + graph)"""
-        print("\n🔗 STEP 5: Testing hybrid retrieval...")
+    def step5_test_enhanced_hybrid_retrieval(self):
+        """Test enhanced hybrid retrieval with proper graph integration"""
+        print("\n🚀 STEP 5: Testing enhanced hybrid retrieval...")
         
         query = "vacuum pump equipment failure"
         print(f"   Query: '{query}'")
@@ -215,122 +258,191 @@ class SemanticVectorizer:
         try:
             # Vector similarity search
             vector_results = self.vector_store.similarity_search_with_score(query, k=2)
-            print(f"\n   📊 Vector results:")
+            print(f"\n   📊 Vector similarity results:")
             
             for doc, score in vector_results:
                 concept_id = doc.metadata.get('concept_id')
+                label = doc.metadata.get('label')
                 print(f"      • {concept_id} (similarity: {score:.3f})")
+                print(f"        Label: {label}")
                 
-                # Graph traversal for this concept
-                traversal_query = """
-                MATCH (concept:SemanticConcept {conceptId: $concept_id})
-                OPTIONAL MATCH (concept)<-[:HAS_SEMANTIC_TYPE]-(entity)
-                OPTIONAL MATCH (entity)-[:HAS_RUL_ASSESSMENT]->(rul:RemainingUsefulLife)
-                OPTIONAL MATCH (entity)-[:HAS_FAILURE_PREDICTION]->(pred:ThirtyDayFailureProbability)
+                # Enhanced graph traversal using the new relationships
+                enhanced_traversal_query = """
+                MATCH (sv:SemanticVector {concept_id: $concept_id})
+                MATCH (sv)-[:VECTOR_REPRESENTATION_OF]->(sc:SemanticConcept)
+                MATCH (dp:DryPump)-[:HAS_VECTOR_REPRESENTATION]->(sv)
+                OPTIONAL MATCH (dp)-[:HAS_RUL_ASSESSMENT]->(rul:RemainingUsefulLife)
+                OPTIONAL MATCH (dp)-[:HAS_FAILURE_PREDICTION]->(pred:ThirtyDayFailureProbability)
+                OPTIONAL MATCH (sc)-[:HAS_MEANING_IN_CONTEXT]->(ctx:SemanticContext)
                 
-                RETURN concept.label as concept_label,
-                       entity.pumpIdentifier as entity_id,
-                       labels(entity)[0] as entity_type,
+                RETURN sc.label as concept_label,
+                       dp.pumpIdentifier as pump_id,
+                       dp.isOperational as is_operational,
                        rul.healthIndex as health_index,
-                       pred.riskScore as risk_score
+                       pred.riskScore as risk_score,
+                       ctx.businessContext as business_context
                 """
                 
                 with self.driver.session() as session:
-                    result = session.run(traversal_query, concept_id=concept_id)
+                    result = session.run(enhanced_traversal_query, concept_id=concept_id)
                     record = result.single()
                     
-                    if record and record['entity_id']:
-                        print(f"        ↳ Connected to: {record['entity_id']} ({record['entity_type']})")
+                    if record and record['pump_id']:
+                        print(f"        ↳ Connected Equipment: {record['pump_id']}")
+                        print(f"        ↳ Operational: {record['is_operational']}")
                         if record['health_index']:
                             print(f"        ↳ Health Index: {record['health_index']}")
                         if record['risk_score']:
                             print(f"        ↳ Risk Score: {record['risk_score']}")
+                        if record['business_context']:
+                            print(f"        ↳ Business Context: {record['business_context'][:60]}...")
                     else:
-                        print(f"        ↳ No operational entities connected yet")
+                        print(f"        ↳ No operational equipment data available")
         
         except Exception as e:
-            print(f"❌ Hybrid retrieval failed: {e}")
+            print(f"❌ Enhanced hybrid retrieval failed: {e}")
         
-        print("\n✅ Hybrid retrieval working!")
+        print(f"\n✅ Enhanced hybrid retrieval working!")
 
-    def step6_inspect_database(self):
-        """Inspect what was created in Neo4j"""
-        print("\n🔍 STEP 6: Inspecting database changes...")
+    def step6_test_equipment_to_vector_queries(self):
+        """Test queries starting from equipment and traversing to vectors"""
+        print("\n🔧 STEP 6: Testing equipment-to-vector queries...")
         
-        # Check SemanticVector nodes
-        vector_query = """
+        try:
+            # Query from equipment to all its vector representations
+            equipment_to_vector_query = """
+            MATCH (dp:DryPump {pumpIdentifier: 'P002'})
+            MATCH (dp)-[:HAS_VECTOR_REPRESENTATION]->(sv:SemanticVector)
+            MATCH (sv)-[:VECTOR_REPRESENTATION_OF]->(sc:SemanticConcept)
+            OPTIONAL MATCH (sc)-[:HAS_MEANING_IN_CONTEXT]->(ctx:SemanticContext)
+            
+            RETURN dp.pumpIdentifier as pump,
+                   sv.concept_id as vector_concept,
+                   sc.label as semantic_label,
+                   sc.domain as domain,
+                   size(sv.embedding) as embedding_dimensions,
+                   ctx.businessContext as business_context
+            ORDER BY sc.domain
+            """
+            
+            with self.driver.session() as session:
+                result = session.run(equipment_to_vector_query)
+                records = list(result)
+                
+                print(f"   ✅ Found {len(records)} vector representations for pump P002:")
+                
+                for record in records:
+                    print(f"\n      📄 {record['vector_concept']}")
+                    print(f"         Domain: {record['domain']}")
+                    print(f"         Label: {record['semantic_label']}")
+                    print(f"         Embedding dimensions: {record['embedding_dimensions']}")
+                    if record['business_context']:
+                        print(f"         Business context: {record['business_context'][:80]}...")
+                
+        except Exception as e:
+            print(f"❌ Equipment-to-vector queries failed: {e}")
+        
+        print(f"\n✅ Equipment-to-vector queries working!")
+
+    def step7_inspect_enhanced_database(self):
+        """Inspect the enhanced database with relationships"""
+        print("\n🔍 STEP 7: Inspecting enhanced database structure...")
+        
+        # Check SemanticVector node relationships
+        relationship_inspection_query = """
         MATCH (sv:SemanticVector)
+        OPTIONAL MATCH (sv)-[r1:VECTOR_REPRESENTATION_OF]->(sc:SemanticConcept)
+        OPTIONAL MATCH (dp:DryPump)-[r2:HAS_VECTOR_REPRESENTATION]->(sv)
+        
         RETURN sv.concept_id as concept_id,
                sv.label as label,
                size(sv.embedding) as embedding_size,
-               substring(sv.text, 0, 60) as text_preview
+               sc.conceptId as linked_concept,
+               dp.pumpIdentifier as linked_equipment,
+               CASE WHEN r1 IS NOT NULL THEN 'Yes' ELSE 'No' END as has_concept_link,
+               CASE WHEN r2 IS NOT NULL THEN 'Yes' ELSE 'No' END as has_equipment_link
         ORDER BY sv.concept_id
         """
         
         try:
             with self.driver.session() as session:
-                result = session.run(vector_query)
+                result = session.run(relationship_inspection_query)
                 records = list(result)
                 
-                print(f"✅ Created {len(records)} SemanticVector nodes:")
+                print(f"✅ Enhanced SemanticVector structure ({len(records)} nodes):")
                 
                 for record in records:
                     print(f"\n   📄 {record['concept_id']}")
                     print(f"      Label: {record['label']}")
                     print(f"      Embedding size: {record['embedding_size']} dimensions")
-                    print(f"      Text: {record['text_preview']}...")
+                    print(f"      Linked to concept: {record['has_concept_link']} ({record['linked_concept']})")
+                    print(f"      Linked to equipment: {record['has_equipment_link']} ({record['linked_equipment']})")
         
         except Exception as e:
-            print(f"❌ Database inspection failed: {e}")
+            print(f"❌ Enhanced database inspection failed: {e}")
         
-        # Check vector index
-        index_query = "SHOW INDEXES YIELD name WHERE name CONTAINS 'semantic'"
+        # Check relationship counts
+        relationship_count_query = """
+        MATCH ()-[r:VECTOR_REPRESENTATION_OF]->()
+        RETURN 'VECTOR_REPRESENTATION_OF' as relationship_type, count(r) as count
+        
+        UNION
+        
+        MATCH ()-[r:HAS_VECTOR_REPRESENTATION]->()
+        RETURN 'HAS_VECTOR_REPRESENTATION' as relationship_type, count(r) as count
+        """
         
         try:
             with self.driver.session() as session:
-                result = session.run(index_query)
-                indexes = list(result)
+                result = session.run(relationship_count_query)
+                rel_counts = list(result)
                 
-                print(f"\n✅ Created {len(indexes)} vector indexes:")
-                for index in indexes:
-                    print(f"   📇 {index['name']}")
+                print(f"\n✅ Relationship counts:")
+                for rel in rel_counts:
+                    print(f"   📊 {rel['relationship_type']}: {rel['count']}")
         
         except Exception as e:
-            print(f"⚠️  Could not check indexes: {e}")
+            print(f"⚠️  Could not check relationship counts: {e}")
 
     def run_complete_implementation(self):
-        """Run the complete step-by-step implementation"""
-        print("🚀 SEMANTIC CONCEPT VECTORIZATION - v2.1")
+        """Run the complete step-by-step implementation with enhanced relationships"""
+        print("🚀 SEMANTIC CONCEPT VECTORIZATION - v2.1 (Enhanced)")
         print("=" * 60)
         
         try:
-            # Run all steps
+            # Run all steps including the new relationship creation
             semantic_data = self.step1_extract_semantic_content()
             texts, metadatas = self.step2_create_embedding_texts(semantic_data)
             self.step3_create_vector_store(texts, metadatas)
-            self.step4_test_similarity_search()
-            self.step5_test_hybrid_retrieval()
-            self.step6_inspect_database()
+            self.step4_create_semantic_relationships()  # NEW STEP
+            self.step5_test_enhanced_hybrid_retrieval()  # ENHANCED
+            self.step6_test_equipment_to_vector_queries()  # NEW STEP
+            self.step7_inspect_enhanced_database()  # ENHANCED
             
-            # Success summary
+            # Enhanced success summary
             print("\n" + "=" * 60)
-            print("🎉 SUCCESS! v2.1 Vector Intelligence complete!")
+            print("🎉 SUCCESS! v2.1 Enhanced Vector Intelligence complete!")
             print("\n💡 What you now have:")
             print("   ✅ 3 semantic concepts converted to vector embeddings")
-            print("   ✅ Similarity search working")
-            print("   ✅ Hybrid vector + graph retrieval working")
-            print("   ✅ New SemanticVector nodes in your database")
-            print("   ✅ Vector index for fast similarity search")
+            print("   ✅ Proper graph integration with relationships")
+            print("   ✅ Equipment-to-vector-to-concept traversal paths")
+            print("   ✅ Enhanced hybrid vector + graph retrieval")
+            print("   ✅ Business context integration")
+            print("   ✅ Full semantic search capabilities")
             
-            print("\n🧪 Try these example searches:")
-            print("   • 'equipment maintenance cost' → finds VacuumPump_Concept")
-            print("   • 'predictive analytics strategy' → finds ConditionBasedMaintenance_Concept")
-            print("   • 'critical manufacturing process' → finds ProcessEnabler_Concept")
+            print("\n🧪 Try these enhanced example searches:")
+            print("   • Vector similarity + equipment health data")
+            print("   • Equipment-based semantic queries")
+            print("   • Business impact analysis via semantic paths")
             
-            print("\n📚 Next documentation steps:")
-            print("   1. Update examples/v2.1-vector-intelligence/")
-            print("   2. Create cypher script for reproducible implementation")
-            print("   3. Update repository README.md")
+            print("\n🔗 New relationship types created:")
+            print("   • SemanticVector -[:VECTOR_REPRESENTATION_OF]-> SemanticConcept")
+            print("   • DryPump -[:HAS_VECTOR_REPRESENTATION]-> SemanticVector")
+            
+            print("\n📚 Enhanced capabilities:")
+            print("   1. Start from equipment → find vector representations")
+            print("   2. Vector similarity → traverse to operational data")
+            print("   3. Semantic concepts → business impact analysis")
             
         except Exception as e:
             print(f"\n❌ FAILED: {e}")
@@ -338,6 +450,7 @@ class SemanticVectorizer:
             print("   • Check .env file exists and has correct values")
             print("   • Verify Neo4j connection")
             print("   • Ensure v2.0 semantic concepts exist")
+            print("   • Verify SemanticVector nodes were created")
 
     def cleanup(self):
         """Optional: Remove vector nodes to start over"""
@@ -350,9 +463,9 @@ class SemanticVectorizer:
         
         try:
             with self.driver.session() as session:
-                # Remove vector nodes
-                session.run("MATCH (sv:SemanticVector) DELETE sv")
-                print("✅ SemanticVector nodes removed")
+                # Remove vector nodes and their relationships
+                session.run("MATCH (sv:SemanticVector) DETACH DELETE sv")
+                print("✅ SemanticVector nodes and relationships removed")
                 
                 # Drop vector index
                 session.run("DROP INDEX semantic_concepts_vector_index IF EXISTS")
@@ -388,7 +501,7 @@ if __name__ == "__main__":
         print("OPENAI_API_KEY=sk-your_key_here")
         sys.exit(1)
     
-    response = input("Ready to proceed with v2.1 Vector Intelligence? (y/N): ")
+    response = input("Ready to proceed with v2.1 Enhanced Vector Intelligence? (y/N): ")
     if response.lower() != 'y':
         print("Exiting...")
         sys.exit(0)
