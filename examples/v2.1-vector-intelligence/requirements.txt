@@ -1,0 +1,17 @@
+# Predictive Maintenance Knowledge Graph v2.1 - Vector Intelligence
+# Python Dependencies for Vector Intelligence Implementation
+
+# Core vector store and embeddings
+langchain-community==0.2.16     # Neo4j vector store integration
+langchain-openai==0.1.23        # OpenAI embeddings API
+neo4j==5.23.0                   # Neo4j database driver
+
+# Environment and configuration  
+python-dotenv==1.0.1            # Environment variable management
+
+# Optional: Enhanced development experience
+# ipython==8.24.0               # Interactive Python shell
+# jupyter==1.0.0                # Jupyter notebooks for exploration
+# matplotlib==3.8.4             # Visualization for embedding analysis
+# numpy==1.26.4                 # Numerical operations
+# pandas==2.2.2                 # Data manipulation and analysis
